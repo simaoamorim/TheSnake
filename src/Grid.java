@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Grid extends JComponent {
-    private java.util.List<Point> activeCells;
+    private java.util.List<Point> snakeCells;
     private int cellSize = 10;
     private static final double margin = 1.0;
     private double XCount = 50.0;
     private double YCount = 50.0;
 
     Grid() {
-        activeCells = new ArrayList<>();
+        snakeCells = new ArrayList<>();
         this.setPreferredSize(new Dimension((int)((XCount *cellSize)+(2*margin)), (int)((YCount *cellSize)+(2*margin))));
     }
 
@@ -21,7 +21,7 @@ class Grid extends JComponent {
         double cellWidth = cellSize;
         double cellHeight = cellSize;
         System.out.println(String.format("Cell size: %dx%d", (int)cellWidth, (int)cellHeight));
-        for (Point fillCell : activeCells) {
+        for (Point fillCell : snakeCells) {
             int cellX = (int)(margin + (fillCell.x * cellWidth));
             int cellY = (int)(margin + (fillCell.y * cellHeight));
             g.setColor(Color.BLACK);
@@ -43,11 +43,17 @@ class Grid extends JComponent {
         this.setPreferredSize(new Dimension((int)((XCount *cellSize)+(2*margin)), (int)((YCount *cellSize)+(2*margin))));
     }
 
+    int getXCount() {return (int) XCount;}
+
+    int getYCount() {return (int) YCount;}
+
     void setXCount(int count) {XCount = count;}
 
     void setYCount(int count) {YCount = count;}
 
-    void setActiveCells(List<Point> list) {activeCells.clear(); activeCells.addAll(list);}
+    void setSnakeCells(List<Point> list) {
+        snakeCells.clear(); snakeCells.addAll(list);}
 
-    void appendActiveCell(Point point) {activeCells.add(point);}
+    void appendSnakeCell(Point point) {
+        snakeCells.add(point);}
 }
