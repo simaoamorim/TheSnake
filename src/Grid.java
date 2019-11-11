@@ -12,7 +12,12 @@ class Grid extends JComponent {
 
     Grid() {
         snakeCells = new ArrayList<>();
-        this.setPreferredSize(new Dimension((int)((XCount *cellSize)+(2*margin)), (int)((YCount *cellSize)+(2*margin))));
+        this.setPreferredSize(
+                new Dimension(
+                        (int)((XCount *cellSize)+(2*margin)),
+                        (int)((YCount *cellSize)+(2*margin))
+                )
+        );
     }
 
     @Override
@@ -40,7 +45,12 @@ class Grid extends JComponent {
 
     void setCellSize(int size) {
         cellSize = size;
-        this.setPreferredSize(new Dimension((int)((XCount *cellSize)+(2*margin)), (int)((YCount *cellSize)+(2*margin))));
+        this.setPreferredSize(
+                new Dimension(
+                        (int)((XCount *cellSize)+(2*margin)),
+                        (int)((YCount *cellSize)+(2*margin))
+                )
+        );
     }
 
     int getXCount() {return (int) XCount;}
@@ -52,8 +62,9 @@ class Grid extends JComponent {
     void setYCount(int count) {YCount = count;}
 
     void setSnakeCells(List<Point> list) {
-        snakeCells.clear(); snakeCells.addAll(list);}
+        snakeCells.clear();
+        snakeCells.addAll(list);
+    }
 
-    void appendSnakeCell(Point point) {
-        snakeCells.add(point);}
+    void appendSnakeCell(Point point) {snakeCells.add(point);}
 }
