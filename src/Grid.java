@@ -43,6 +43,10 @@ class Grid extends JComponent {
         }
     }
 
+    void iteration() {
+        System.out.println("iteration");
+    }
+
     void setCellSize(int size) {
         cellSize = size;
         this.setPreferredSize(

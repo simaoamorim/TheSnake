@@ -12,7 +12,7 @@ class GUI extends JFrame {
     private JButton startButton;
     private JButton resetButton;
     private Timer iterationTimer;
-    private static final int timeStep = 100; // Time in ms
+    private static final int timeStep = 200; // Time in ms
 
     GUI() {
         setSize(frameSize);
@@ -23,6 +23,8 @@ class GUI extends JFrame {
         pack();
         setLocationRelativeTo(null); // Center the frame on the screen
         setVisible(true);
+        iterationTimer = new Timer(timeStep,this::timerHandler);
+        iterationTimer.stop();
     }
 
     private void initUI() {
@@ -65,6 +67,19 @@ class GUI extends JFrame {
                 setLocationRelativeTo(null); // Move window to the center of the screen
                 break;
             }
+            case "start": {
+                if (! iterationTimer.isRunning()) {
+                    iterationTimer.start();
+                    startButton.setText("Pause");
+                    resetButton.setEnabled(false);
+                }
+                else {
+                    iterationTimer.stop();
+                    startButton.setText("Start");
+                    resetButton.setEnabled(true);
+                }
+                break;
+            }
             default: {
                 break;
             }
@@ -78,6 +93,10 @@ class GUI extends JFrame {
         grid.repaint();
         grid.revalidate();
         panel2.setPreferredSize(new Dimension((int)grid.getPreferredSize().getWidth()+5, (int)grid.getPreferredSize().getHeight()+5));
+    }
+
+    private void timerHandler(ActionEvent e) {
+        grid.iteration();
     }
 
 }
