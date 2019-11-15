@@ -9,10 +9,10 @@ class GUI extends JFrame {
     private JPanel panel2;
     private static final Dimension frameSize = new Dimension(600,600);
     private static final Dimension maxFrameSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private JButton startButton;
-    private JButton resetButton;
+    JButton startButton;
+    JButton resetButton;
     private Timer iterationTimer;
-    private static final int timeStep = 200; // Time in ms
+    private static final int timeStep = 100; // Time in ms
 
     GUI() {
         setSize(frameSize);
@@ -29,7 +29,7 @@ class GUI extends JFrame {
 
     private void initUI() {
         setLayout(new BorderLayout());
-        grid = new Grid();
+        grid = new Grid(this);
         panel2 = new JPanel();
         panel2.setLayout(new FlowLayout(FlowLayout.CENTER));
         panel2.add(grid);
@@ -40,14 +40,17 @@ class GUI extends JFrame {
         resetButton = new JButton("Reset");
         resetButton.setActionCommand("reset");
         resetButton.addActionListener(this::buttonActions);
+        resetButton.setFocusable(false);
         startButton = new JButton("Start");
         startButton.setActionCommand("start");
         startButton.addActionListener(this::buttonActions);
+        startButton.setFocusable(false);
         slider = new JSlider(JSlider.HORIZONTAL);
         slider.setMinimum(1);
         slider.setMaximum(50);
         slider.setValue(10);
         slider.addChangeListener(this::zoomChosen);
+        slider.setFocusable(false);
         resetButton.setSize(100,60);
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonsPanel.add(startButton);
@@ -65,6 +68,7 @@ class GUI extends JFrame {
                 slider.setValue(10);
                 pack(); // Resize the window to fit contents
                 setLocationRelativeTo(null); // Move window to the center of the screen
+                grid.reset();
                 break;
             }
             case "start": {
