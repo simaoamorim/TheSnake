@@ -1,18 +1,29 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-class Grid extends JComponent {
-    private java.util.List<Point> activeCells;
+class Grid extends JComponent implements KeyListener {
     private int cellSize = 10;
     private static final double margin = 1.0;
     private double XCount = 50.0;
     private double YCount = 50.0;
+    private Snake snake;
+    private boolean firstIteration = true;
+    private Snake.Direction nextDirection;
+    private GUI gui;
 
-    Grid() {
-        activeCells = new ArrayList<>();
-        this.setPreferredSize(new Dimension((int)((XCount *cellSize)+(2*margin)), (int)((YCount *cellSize)+(2*margin))));
+    Grid(GUI gui) {
+        this.gui = gui;
+        snake = new Snake(this);
+        addKeyListener(this);
+        setFocusable(true);
+        this.setPreferredSize(
+                new Dimension(
+                        (int)((XCount *cellSize)+(2*margin)),
+                        (int)((YCount *cellSize)+(2*margin))
+                )
+        );
     }
 
     @Override
@@ -21,7 +32,7 @@ class Grid extends JComponent {
         double cellWidth = cellSize;
         double cellHeight = cellSize;
         System.out.println(String.format("Cell size: %dx%d", (int)cellWidth, (int)cellHeight));
-        for (Point fillCell : activeCells) {
+        for (Point fillCell : snake.getBody()) {
             int cellX = (int)(margin + (fillCell.x * cellWidth));
             int cellY = (int)(margin + (fillCell.y * cellHeight));
             g.setColor(Color.BLACK);
@@ -38,16 +49,87 @@ class Grid extends JComponent {
         }
     }
 
-    void setCellSize(int size) {
-        cellSize = size;
-        this.setPreferredSize(new Dimension((int)((XCount *cellSize)+(2*margin)), (int)((YCount *cellSize)+(2*margin))));
+    void iteration() {
+        if (firstIteration) {
+            nextDirection = Snake.Direction.getRandom();
+            firstIteration = false;
+            System.out.printf("First direction: %s\n", nextDirection.toString());
+        }
+        snake.move(nextDirection);
+        repaint();
+        requestFocus();
     }
 
-    void setXCount(int count) {XCount = count;}
+    void setCellSize(int size) {
+        cellSize = size;
+        this.setPreferredSize(
+                new Dimension(
+                        (int)((XCount *cellSize)+(2*margin)),
+                        (int)((YCount *cellSize)+(2*margin))
+                )
+        );
+    }
 
-    void setYCount(int count) {YCount = count;}
+    int getXCount() {return (int) XCount;}
 
-    void setActiveCells(List<Point> list) {activeCells.clear(); activeCells.addAll(list);}
+    int getYCount() {return (int) YCount;}
 
-    void appendActiveCell(Point point) {activeCells.add(point);}
+    /*void setXCount(int count) {XCount = count;}*/
+
+    /*void setYCount(int count) {YCount = count;}*/
+
+    void reset() {
+        snake.reset(this);
+        repaint();
+        firstIteration = true;
+    }
+
+    // KeyListener methods
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+        switch (code) {
+            case KeyEvent.VK_LEFT: {// Left arrow
+                System.out.println("Left arrow clicked");
+                nextDirection = Snake.Direction.WEST;
+                break;
+            }
+            case KeyEvent.VK_UP: {// Up arrow
+                System.out.println("Up arrow clicked");
+                nextDirection = Snake.Direction.NORTH;
+                break;
+            }
+            case KeyEvent.VK_RIGHT: {// Right arrow
+                System.out.println("Right arrow clicked");
+                nextDirection = Snake.Direction.EAST;
+                break;
+            }
+            case KeyEvent.VK_DOWN: {// Down arrow
+                System.out.println("Down arrow clicked");
+                nextDirection = Snake.Direction.SOUTH;
+                break;
+            }
+            case KeyEvent.VK_ESCAPE: {
+                gui.startButton.doClick();
+                break;
+            }
+            case KeyEvent.VK_R: {
+                if (gui.resetButton.isEnabled()) {
+                    gui.resetButton.doClick();
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 }
